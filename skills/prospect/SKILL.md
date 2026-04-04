@@ -32,15 +32,12 @@ Identify and qualify 3-5 startup prospects per day matching TestKarma's ICP. Mai
 
 Goal: Build the pool. Run once initially, then periodically to refresh with new companies.
 
-**Step 1 — Gather.** Run all pool-building scripts in parallel:
+**Step 1 — Gather.** Run your custom gathering scripts to populate the pool:
 ```bash
-python scripts/gather_yc.py
-python scripts/gather_producthunt.py --pages 10
-python scripts/gather_accelerators.py
-python scripts/gather_sbir.py
+python scripts/gather_yoursource.py
 ```
 
-Each script upserts directly into the Neon Postgres pool via `DATABASE_URL`. If a script fails, log the error and continue — partial results are acceptable.
+See `scripts/gather_example.py` for the template. Each script calls `pool_db.upsert_company()` to insert companies into the Neon Postgres pool via `DATABASE_URL`. If a script fails, log the error and continue — partial results are acceptable.
 
 **Step 2 — Display pool stats.** Query the pool for totals by state:
 ```bash
@@ -327,16 +324,11 @@ All scripts live in `scripts/`. They handle data fetching and formatting — the
 | `pipeline.py` | Current pipeline entrypoint: creates `pipeline_runs`, emits the batch JSON, reports pool stats, and supports score decay via flags |
 | `pool_db.py` | Shared pool database utilities; CLI for stats and pick operations |
 | `research_db.py` | Deep research queue helpers used by the separate `/research` skill |
-| `gather_yc.py` | YC open-source API: filter by batch, team size, status |
-| `gather_producthunt.py` | ProductHunt scraping: trending launches (`--pages N`) |
-| `gather_accelerators.py` | Accelerator portfolio page scraping via Firecrawl |
-| `gather_sbir.py` | SBIR.gov API: NSF Phase I software awards |
+| `gather_example.py` | Template for writing your own gathering scripts — shows the `upsert_company()` interface |
 | `enrich_website.py` | Website scraping via Firecrawl with curl fallback, 7-day cache |
 | `enrich_ats.py` | Greenhouse/Lever/Ashby public API checks for open roles |
 | `enrich_funding.py` | Multi-source funding detection (pool data, SEC EDGAR, website) |
 | `output_formats.py` | Markdown, JSON, CSV report generation |
-
-**Legacy utilities:** `init_db.py` and `migrate_to_neon.py` exist for the retired SQLite workflow. Do not reach for them unless you are explicitly doing historical migration work.
 
 ---
 
@@ -354,7 +346,6 @@ All scripts live in `scripts/`. They handle data fetching and formatting — the
 - Adding new pool sources
 - Changing hard disqualifier criteria
 - Resetting or clearing the prospect pool
-- Running the legacy SQLite migration/reset scripts
 - Installing new Python packages
 
 ### Never

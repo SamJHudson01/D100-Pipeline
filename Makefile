@@ -24,11 +24,8 @@ dev-worker: ## Start OpenRouter research worker only
 migrate: ## Run Prisma migrations
 	npx prisma migrate deploy
 
-seed: ## Run all pool-building gather scripts
-	python scripts/gather_yc.py
-	python scripts/gather_producthunt.py --pages 10
-	python scripts/gather_accelerators.py
-	python scripts/gather_sbir.py
+seed: ## Run your gathering scripts then show pool stats
+	@echo "Add your gather scripts to this target (see scripts/gather_example.py)"
 	python scripts/pool_db.py stats
 
 # ── Build & Test ─────────────────────────────────────────────────────
