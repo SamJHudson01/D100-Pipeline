@@ -1,0 +1,165 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  // Connection strings loaded via prisma.config.ts from parent .env
+}
+
+// ─── Companies ───────────────────────────────────────────────────────────────
+
+model Company {
+  domain            String  @id @db.Text
+  name              String  @db.Text
+  url               String? @db.Text
+  description       String? @db.Text
+  source            String? @db.Text
+  sources           Json?   @db.JsonB
+  sourceData        Json?   @map("source_data") @db.JsonB
+  state             String  @default("discovered") @db.Text
+  preFilterResult   String? @map("pre_filter_result") @db.Text
+  preFilterConfidence Float? @map("pre_filter_confidence")
+  score             Int?
+  originalScore     Int?    @map("original_score")
+  scoredAt          DateTime? @map("scored_at") @db.Timestamptz(6)
+  verdict           String? @db.Text
+  teamSize          Int?    @map("team_size")
+  teamSizeSource    String? @map("team_size_source") @db.Text
+  teamSizeConfidence String? @map("team_size_confidence") @db.Text
+  fundingStage      String? @map("funding_stage") @db.Text
+  fundingEvidence   String? @map("funding_evidence") @db.Text
+  atsPlatform       String? @map("ats_platform") @db.Text
+  atsData           Json?   @map("ats_data") @db.JsonB
+  enrichmentData    Json?   @map("enrichment_data") @db.JsonB
+  lastEnriched      DateTime? @map("last_enriched") @db.Timestamptz(6)
+  lastScored        DateTime? @map("last_scored") @db.Timestamptz(6)
+
+  // Triage
+  snoozedUntil      DateTime? @map("snoozed_until") @db.Timestamptz(6)
+  dismissed         Boolean @default(false)
+  pinned            Boolean @default(false)
+
+  // Dream 100
+  dream100          Boolean @default(false)
+  sequenceStep      Int?    @map("sequence_step")
+  sequenceStartedAt DateTime? @map("sequence_started_at") @db.Timestamptz(6)
+  sequencePaused    Boolean @default(false) @map("sequence_paused")
+  lastTouchDate     DateTime? @map("last_touch_date") @db.Timestamptz(6)
+
+  // Signal tracking
+  hasNewSignal      Boolean @default(false) @map("has_new_signal")
+  signalType        String? @map("signal_type") @db.Text
+  signalDate        DateTime? @map("signal_date") @db.Timestamptz(6)
+
+  // Extracted hot fields
+  hasPricingPage    Boolean @default(false) @map("has_pricing_page")
+  hasSignup         Boolean @default(false) @map("has_signup")
+  hasGrowthHire     Boolean @default(false) @map("has_growth_hire")
+  totalAtsRoles     Int     @default(0) @map("total_ats_roles")
+
+  // Pipeline tracking
+  lastRunId         String? @map("last_run_id") @db.Text
+
+  // Pipeline (kanban board stage + scratchpad)
+  pipelineStage     String  @default("backlog") @map("pipeline_stage") @db.Text
+  notes             String? @db.Text
+
+  // Archive (soft-remove from pool view)
+  archived          Boolean @default(false)
+
+  // Region verification
+  regionVerified    Boolean @default(false) @map("region_verified")
+
+  // Timestamps
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Deep research (separate from enrichment — different writer, schema, lifecycle)
+  researchData      Json?   @map("research_data") @db.JsonB
+
+  // Relations
+  regions           CompanyRegion[]
+  touchpoints       Touchpoint[]
+  researchJobs      ResearchJob[]
+
+  // Indexes (basic — partial indexes added in raw SQL migration)
+  @@index([state])
+  @@index([source])
+  @@index([archived, state], map: "companies_archived_state_idx")
+
+  @@map("companies")
+}
+
+// ─── Company Regions ─────────────────────────────────────────────────────────
+
+model CompanyRegion {
+  domain  String  @db.Text
+  region  String  @db.Text
+
+  company Company @relation(fields: [domain], references: [domain], onDelete: Cascade)
+
+  @@id([domain, region])
+  @@index([domain])
+  @@map("company_regions")
+}
+
+// ─── Touchpoints ─────────────────────────────────────────────────────────────
+
+model Touchpoint {
+  id        Int      @id @default(autoincrement())
+  domain    String   @db.Text
+  touchDate DateTime @map("touch_date") @db.Timestamptz(6)
+  channel   String   @db.Text
+  type      String   @db.Text
+  notes     String?  @db.Text
+  outcome   String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  company   Company  @relation(fields: [domain], references: [domain], onDelete: Cascade)
+
+  @@index([domain, touchDate(sort: Desc)])
+  @@map("touchpoints")
+}
+
+// ─── Pipeline Runs ───────────────────────────────────────────────────────────
+
+model PipelineRun {
+  runId              String   @id @map("run_id") @db.Text
+  startedAt          DateTime @default(now()) @map("started_at") @db.Timestamptz(6)
+  completedAt        DateTime? @map("completed_at") @db.Timestamptz(6)
+  runType            String   @map("run_type") @db.Text
+  companiesProcessed Int      @default(0) @map("companies_processed")
+  companiesQualified Int      @default(0) @map("companies_qualified")
+  companiesRejected  Int      @default(0) @map("companies_rejected")
+  status             String   @default("running") @db.Text
+  summary            String?  @db.Text
+  region             String   @default("uk") @db.Text
+
+  @@map("pipeline_runs")
+}
+
+// ─── Research Jobs ──────────────────────────────────────────────────────────
+// Job queue for deep research. Web UI creates pending jobs; the manual-agent
+// workflow claims and processes them. The executor keeps the legacy "claude"
+// key for compatibility with existing rows and constraints.
+
+model ResearchJob {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  domain      String    @db.Text
+  executor    String    @default("claude") @db.Text
+  status      String    @default("pending") @db.Text
+  progressMessage String? @map("progress_message") @db.Text
+  requestedAt DateTime  @default(now()) @map("requested_at") @db.Timestamptz(6)
+  startedAt   DateTime? @map("started_at") @db.Timestamptz(6)
+  completedAt DateTime? @map("completed_at") @db.Timestamptz(6)
+  error       String?   @db.Text
+
+  company     Company   @relation(fields: [domain], references: [domain], onDelete: Cascade)
+
+  @@index([domain], map: "research_jobs_domain_idx")
+  @@index([domain, status], map: "research_jobs_domain_status_idx")
+  @@index([executor, status, requestedAt], map: "research_jobs_executor_status_requested_at_idx")
+  @@map("research_jobs")
+}

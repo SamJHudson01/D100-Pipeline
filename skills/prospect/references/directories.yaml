@@ -1,0 +1,1144 @@
+# directories.yaml
+# Config-driven directory scraper definitions.
+# Each entry defines a startup directory source and how to scrape it.
+# The framework reads this config and dispatches to the appropriate scraper template.
+#
+# scrape_method: firecrawl | static_html | api | csv | browser
+# template: webflow | wordpress | squarespace | generic | custom
+# pagination.type: none | query_param | cursor | scroll | load_more
+#
+# Field mappings use CSS selectors (static_html/browser) or JSON paths (api/csv).
+# Selectors marked "# guess" need refinement after initial scrape.
+
+# =============================================================================
+# WAVE 1 — Mega-directories (highest volume)
+# =============================================================================
+
+directories:
+
+  # ---------------------------------------------------------------------------
+  # 1. There's An AI For That (TAAFT)
+  # ---------------------------------------------------------------------------
+  - name: taaft
+    label: "There's An AI For That"
+    url: https://theresanaiforthat.com/companies/
+    alt_urls:
+      - https://theresanaiforthat.com/
+      - https://theresanaiforthat.com/startups/
+    scrape_method: firecrawl
+    template: custom
+    field_mapping:
+      name: "h3.company-name, .tool-name"  # guess
+      url: "a.company-link[href]"  # guess
+      description: ".company-description, .tool-description"  # guess
+      industry: ".company-category, .tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: scroll
+      param_name: null
+      max_pages: 100
+    estimated_yield: "3,000-6,000 companies"
+    region: Global
+    saas_percentage: 75
+    refresh_interval_days: 14
+    wave: 1
+    enabled: true
+    notes: >
+      Server-rendered directory of AI companies. High volume but heavily
+      AI-focused, so SaaS percentage is an estimate. Firecrawl needed for
+      JS-rendered content. Infinite scroll pagination.
+
+  # ---------------------------------------------------------------------------
+  # 2. SaaSHub
+  # ---------------------------------------------------------------------------
+  - name: saashub
+    label: SaaSHub
+    url: https://saashub.com/startups
+    alt_urls:
+      - https://www.saashub.com/startups
+      - https://saashub.com/
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: "h3 a, .startup-name a"  # guess
+      url: "h3 a[href], .startup-name a[href]"  # guess
+      description: ".startup-description, .description-text"  # guess
+      industry: ".category-tag, .startup-category"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: query_param
+      param_name: page
+      max_pages: 200
+    estimated_yield: "5,000-15,000+ SaaS products"
+    region: Global
+    saas_percentage: 95
+    refresh_interval_days: 7
+    wave: 1
+    enabled: true
+    notes: >
+      Server-rendered, paginated listing. Very high SaaS concentration since
+      the entire directory is SaaS-focused. One of the highest-yield sources.
+
+  # ---------------------------------------------------------------------------
+  # 3. BetaList
+  # ---------------------------------------------------------------------------
+  - name: betalist
+    label: BetaList
+    url: https://betalist.com/
+    alt_urls:
+      - https://betalist.com/topics/saas
+      - https://betalist.com/startups
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: "h2 a.startup_name, .startupCard__name"  # guess
+      url: "a.startup_name[href], .startupCard__link[href]"  # guess
+      description: ".startup_tagline, .startupCard__tagline"  # guess
+      industry: ".startup_topics a, .tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: query_param
+      param_name: page
+      max_pages: 150
+    estimated_yield: "5,000-8,000 startups"
+    region: Global
+    saas_percentage: 65
+    refresh_interval_days: 7
+    wave: 1
+    enabled: true
+    notes: >
+      Large directory of early-stage startups. Use /topics/saas for
+      SaaS-specific filtering. Many pre-launch companies, so quality
+      varies. Good for discovering very early-stage prospects.
+
+  # ---------------------------------------------------------------------------
+  # 4. StackShare CSV
+  # ---------------------------------------------------------------------------
+  - name: stackshare_csv
+    label: StackShare CSV
+    url: https://github.com/nicholasgasior/stackshare-dataset
+    alt_urls:
+      - https://raw.githubusercontent.com/nicholasgasior/stackshare-dataset/master/data.csv
+    scrape_method: csv
+    template: custom
+    field_mapping:
+      name: "name"  # CSV column
+      url: "url"  # CSV column
+      description: "description"  # CSV column
+      industry: "category"  # CSV column
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "2,000-3,000 tools/companies"
+    region: Global
+    saas_percentage: 80
+    refresh_interval_days: 90
+    wave: 1
+    enabled: true
+    notes: >
+      CSV download from GitHub. Static dataset, so refresh is infrequent.
+      Good for cross-referencing tech stack data. Column names need
+      verification after initial download.
+
+  # =============================================================================
+  # WAVE 2 — Accelerators and VCs (17 sources)
+  # =============================================================================
+
+  # ---------------------------------------------------------------------------
+  # 5. Capital Factory
+  # ---------------------------------------------------------------------------
+  - name: capital_factory
+    label: Capital Factory
+    url: https://www.capitalfactory.com/portfolio/
+    alt_urls:
+      - https://capitalfactory.com/portfolio/
+    scrape_method: static_html
+    template: wordpress
+    field_mapping:
+      name: "h3.portfolio-name, .company-name"  # guess
+      url: "a.portfolio-link[href]"  # guess
+      description: ".portfolio-description, .company-tagline"  # guess
+      industry: ".portfolio-sector, .industry-tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "200-400 companies"
+    region: US
+    saas_percentage: 50
+    refresh_interval_days: 30
+    wave: 2
+    enabled: true
+    notes: >
+      Austin-based accelerator. Portfolio page typically loads all companies
+      on a single page. Mix of SaaS, hardware, and other verticals.
+
+  # ---------------------------------------------------------------------------
+  # 6. Dreamit Ventures
+  # ---------------------------------------------------------------------------
+  - name: dreamit_ventures
+    label: Dreamit Ventures
+    url: https://www.dreamit.com/portfolio
+    alt_urls:
+      - https://dreamit.com/portfolio
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: "h3.company-name, .portfolio-item h3"  # guess
+      url: "a.company-link[href], .portfolio-item a[href]"  # guess
+      description: ".company-description, .portfolio-item p"  # guess
+      industry: ".company-sector, .portfolio-tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "100-250 companies"
+    region: US
+    saas_percentage: 55
+    refresh_interval_days: 30
+    wave: 2
+    enabled: true
+    notes: >
+      US accelerator focused on healthtech and urbantech verticals.
+      Portfolio is usually a single-page listing.
+
+  # ---------------------------------------------------------------------------
+  # 7. Mucker Capital
+  # ---------------------------------------------------------------------------
+  - name: mucker_capital
+    label: Mucker Capital
+    url: https://www.mucker.com/portfolio
+    alt_urls:
+      - https://mucker.com/portfolio
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: ".portfolio-company-name, h3.company-title"  # guess
+      url: ".portfolio-company a[href]"  # guess
+      description: ".portfolio-company-desc, .company-blurb"  # guess
+      industry: ".company-category"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "50-100 companies"
+    region: US
+    saas_percentage: 60
+    refresh_interval_days: 30
+    wave: 2
+    enabled: true
+    notes: >
+      LA-based early-stage VC. Small but curated portfolio.
+      Likely single-page listing.
+
+  # ---------------------------------------------------------------------------
+  # 8. Rockstart
+  # ---------------------------------------------------------------------------
+  - name: rockstart
+    label: Rockstart
+    url: https://www.rockstart.com/portfolio/
+    alt_urls:
+      - https://rockstart.com/portfolio/
+      - https://www.rockstart.com/startups/
+    scrape_method: static_html
+    template: wordpress
+    field_mapping:
+      name: "h3.startup-name, .portfolio-card h3"  # guess
+      url: ".portfolio-card a[href]"  # guess
+      description: ".startup-description, .portfolio-card p"  # guess
+      industry: ".startup-sector, .portfolio-tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "100-200 companies"
+    region: Europe
+    saas_percentage: 45
+    refresh_interval_days: 30
+    wave: 2
+    enabled: true
+    notes: >
+      European accelerator (Netherlands-based). Covers AgriFood, Energy,
+      and Emerging Tech verticals. Mix of SaaS and deeptech.
+
+  # ---------------------------------------------------------------------------
+  # 9. TinySeed
+  # ---------------------------------------------------------------------------
+  - name: tinyseed
+    label: TinySeed
+    url: https://tinyseed.com/companies
+    alt_urls:
+      - https://tinyseed.com/portfolio
+      - https://www.tinyseed.com/companies
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: "h3.company-name, .company-card h3"  # guess
+      url: ".company-card a[href], a.company-link[href]"  # guess
+      description: ".company-description, .company-card p"  # guess
+      industry: ".company-category"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "50-100 companies"
+    region: Global
+    saas_percentage: 95
+    refresh_interval_days: 30
+    wave: 2
+    enabled: true
+    notes: >
+      SaaS-focused accelerator for bootstrapped founders. Very high SaaS
+      concentration. Small portfolio but high-quality ICP matches.
+
+  # ---------------------------------------------------------------------------
+  # 10. Nauta Capital
+  # ---------------------------------------------------------------------------
+  - name: nauta_capital
+    label: Nauta Capital
+    url: https://nautacapital.com/portfolio/
+    alt_urls:
+      - https://www.nautacapital.com/portfolio/
+    scrape_method: static_html
+    template: wordpress
+    field_mapping:
+      name: "h3.portfolio-name, .portfolio-item h3"  # guess
+      url: ".portfolio-item a[href]"  # guess
+      description: ".portfolio-item .description, .portfolio-item p"  # guess
+      industry: ".portfolio-sector"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "30-80 companies"
+    region: Europe
+    saas_percentage: 70
+    refresh_interval_days: 30
+    wave: 2
+    enabled: true
+    notes: >
+      European B2B software VC. Strong SaaS focus. Relatively small
+      portfolio but good ICP alignment for B2B SaaS.
+
+  # ---------------------------------------------------------------------------
+  # 11. Village Global
+  # ---------------------------------------------------------------------------
+  - name: village_global
+    label: Village Global
+    url: https://villageglobal.vc/portfolio/
+    alt_urls:
+      - https://www.villageglobal.vc/portfolio/
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: ".portfolio-company-name, h3.company-name"  # guess
+      url: ".portfolio-company a[href]"  # guess
+      description: ".portfolio-company-desc"  # guess
+      industry: ".portfolio-company-sector"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "100-300 companies"
+    region: US
+    saas_percentage: 55
+    refresh_interval_days: 30
+    wave: 2
+    enabled: true
+    notes: >
+      Network-driven seed fund backed by prominent tech founders.
+      Diverse portfolio across multiple verticals.
+
+  # ---------------------------------------------------------------------------
+  # 12. Berkeley SkyDeck
+  # ---------------------------------------------------------------------------
+  - name: berkeley_skydeck
+    label: Berkeley SkyDeck
+    url: https://skydeck.berkeley.edu/startups/
+    alt_urls:
+      - https://skydeck.berkeley.edu/portfolio/
+      - https://skydeck.berkeley.edu/companies/
+    scrape_method: static_html
+    template: wordpress
+    field_mapping:
+      name: "h3.startup-name, .startup-card h3"  # guess
+      url: ".startup-card a[href]"  # guess
+      description: ".startup-card .description, .startup-card p"  # guess
+      industry: ".startup-sector, .startup-tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "100-300 companies"
+    region: US
+    saas_percentage: 50
+    refresh_interval_days: 30
+    wave: 2
+    enabled: true
+    notes: >
+      UC Berkeley accelerator. Mix of deeptech, biotech, and software.
+      University-affiliated, so some companies may be very early stage.
+
+  # ---------------------------------------------------------------------------
+  # 13. Gener8tor
+  # ---------------------------------------------------------------------------
+  - name: gener8tor
+    label: Gener8tor
+    url: https://www.gener8tor.com/portfolio
+    alt_urls:
+      - https://gener8tor.com/portfolio
+      - https://www.gener8tor.com/companies
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: "h3.company-name, .portfolio-card h3"  # guess
+      url: ".portfolio-card a[href]"  # guess
+      description: ".portfolio-card .tagline, .portfolio-card p"  # guess
+      industry: ".portfolio-card .category"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: load_more
+      param_name: null
+      max_pages: 5
+    estimated_yield: "100-250 companies"
+    region: US
+    saas_percentage: 50
+    refresh_interval_days: 30
+    wave: 2
+    enabled: true
+    notes: >
+      US-based accelerator with programs across multiple cities.
+      Diverse verticals. May use load-more button for pagination.
+
+  # ---------------------------------------------------------------------------
+  # 14. 100X.VC
+  # ---------------------------------------------------------------------------
+  - name: 100x_vc
+    label: 100X.VC
+    url: https://www.100x.vc/portfolio
+    alt_urls:
+      - https://100x.vc/portfolio
+      - https://www.100x.vc/companies
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: "h3.company-name, .portfolio-item h3"  # guess
+      url: ".portfolio-item a[href]"  # guess
+      description: ".portfolio-item p, .company-desc"  # guess
+      industry: ".portfolio-item .tag, .company-sector"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "100-200 companies"
+    region: India
+    saas_percentage: 50
+    refresh_interval_days: 30
+    wave: 2
+    enabled: true
+    notes: >
+      India-focused early-stage VC. Invests via iSAFE notes.
+      Diverse portfolio, moderate SaaS percentage.
+
+  # ---------------------------------------------------------------------------
+  # 15. Speedinvest
+  # ---------------------------------------------------------------------------
+  - name: speedinvest
+    label: Speedinvest
+    url: https://speedinvest.com/portfolio
+    alt_urls:
+      - https://www.speedinvest.com/portfolio
+      - https://speedinvest.com/companies
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: "h3.company-name, .portfolio-card h3"  # guess
+      url: ".portfolio-card a[href]"  # guess
+      description: ".portfolio-card p, .company-description"  # guess
+      industry: ".portfolio-card .sector-tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: load_more
+      param_name: null
+      max_pages: 5
+    estimated_yield: "200-400 companies"
+    region: Europe
+    saas_percentage: 55
+    refresh_interval_days: 30
+    wave: 2
+    enabled: true
+    notes: >
+      European VC with a large portfolio. Covers fintech, healthtech,
+      deeptech, and SaaS. Well-structured portfolio page.
+
+  # ---------------------------------------------------------------------------
+  # 16. Creandum
+  # ---------------------------------------------------------------------------
+  - name: creandum
+    label: Creandum
+    url: https://www.creandum.com/portfolio
+    alt_urls:
+      - https://creandum.com/portfolio
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: "h3.company-name, .portfolio-item h3"  # guess
+      url: ".portfolio-item a[href]"  # guess
+      description: ".portfolio-item p"  # guess
+      industry: ".portfolio-item .tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "50-100 companies"
+    region: Europe
+    saas_percentage: 60
+    refresh_interval_days: 30
+    wave: 2
+    enabled: true
+    notes: >
+      Nordic/European VC (Spotify was a notable portfolio company).
+      Smaller, curated portfolio with good software representation.
+
+  # ---------------------------------------------------------------------------
+  # 17. Backstage Capital
+  # ---------------------------------------------------------------------------
+  - name: backstage_capital
+    label: Backstage Capital
+    url: https://backstagecapital.com/portfolio/
+    alt_urls:
+      - https://www.backstagecapital.com/portfolio/
+    scrape_method: static_html
+    template: squarespace
+    field_mapping:
+      name: "h3.portfolio-name, .summary-title a"  # guess
+      url: ".summary-title a[href], .portfolio-item a[href]"  # guess
+      description: ".summary-excerpt, .portfolio-description"  # guess
+      industry: null
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "100-200 companies"
+    region: US
+    saas_percentage: 50
+    refresh_interval_days: 30
+    wave: 2
+    enabled: true
+    notes: >
+      VC focused on underrepresented founders. Diverse portfolio.
+      Likely Squarespace-based site. Industry tags may not be available.
+
+  # ---------------------------------------------------------------------------
+  # 18. Startup Wise Guys
+  # ---------------------------------------------------------------------------
+  - name: startup_wise_guys
+    label: Startup Wise Guys
+    url: https://startupwiseguys.com/portfolio/
+    alt_urls:
+      - https://www.startupwiseguys.com/portfolio/
+      - https://startupwiseguys.com/companies/
+    scrape_method: static_html
+    template: wordpress
+    field_mapping:
+      name: "h3.company-name, .portfolio-card h3"  # guess
+      url: ".portfolio-card a[href]"  # guess
+      description: ".portfolio-card p, .company-tagline"  # guess
+      industry: ".portfolio-card .vertical-tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: load_more
+      param_name: null
+      max_pages: 5
+    estimated_yield: "200-400 companies"
+    region: Europe
+    saas_percentage: 65
+    refresh_interval_days: 30
+    wave: 2
+    enabled: true
+    notes: >
+      European B2B SaaS accelerator. Higher SaaS percentage than most
+      accelerators. Based in the Baltics with pan-European scope.
+
+  # ---------------------------------------------------------------------------
+  # 19. Flat6Labs
+  # ---------------------------------------------------------------------------
+  - name: flat6labs
+    label: Flat6Labs
+    url: https://www.flat6labs.com/portfolio/
+    alt_urls:
+      - https://flat6labs.com/portfolio/
+      - https://www.flat6labs.com/startups/
+    scrape_method: static_html
+    template: wordpress
+    field_mapping:
+      name: "h3.startup-name, .portfolio-item h3"  # guess
+      url: ".portfolio-item a[href]"  # guess
+      description: ".portfolio-item p, .startup-desc"  # guess
+      industry: ".portfolio-item .sector"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: query_param
+      param_name: page
+      max_pages: 10
+    estimated_yield: "100-300 companies"
+    region: MENA
+    saas_percentage: 40
+    refresh_interval_days: 30
+    wave: 2
+    enabled: true
+    notes: >
+      MENA-focused accelerator with offices across the region. Diverse
+      portfolio including fintech, healthtech, and e-commerce. Lower
+      SaaS percentage than US/EU accelerators.
+
+  # ---------------------------------------------------------------------------
+  # 20. Calm Ventures
+  # ---------------------------------------------------------------------------
+  - name: calm_ventures
+    label: Calm Ventures
+    url: https://calm.vc/portfolio
+    alt_urls:
+      - https://www.calm.vc/portfolio
+      - https://calm.vc/companies
+    scrape_method: static_html
+    template: webflow
+    field_mapping:
+      name: ".portfolio-name, h3.company-name"  # guess
+      url: ".portfolio-item a[href]"  # guess
+      description: ".portfolio-item .description"  # guess
+      industry: ".portfolio-item .tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "30-60 companies"
+    region: US
+    saas_percentage: 55
+    refresh_interval_days: 30
+    wave: 2
+    enabled: true
+    notes: >
+      LA-based seed/Series A VC. Small portfolio, likely single-page
+      listing. Webflow-based site likely.
+
+  # ---------------------------------------------------------------------------
+  # 21. Unshackled Ventures
+  # ---------------------------------------------------------------------------
+  - name: unshackled_ventures
+    label: Unshackled Ventures
+    url: https://www.unshackled.co/portfolio
+    alt_urls:
+      - https://unshackled.co/portfolio
+      - https://www.unshackled.co/companies
+    scrape_method: static_html
+    template: webflow
+    field_mapping:
+      name: ".portfolio-name, h3.company-name"  # guess
+      url: ".portfolio-item a[href]"  # guess
+      description: ".portfolio-item p"  # guess
+      industry: ".portfolio-item .tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "50-100 companies"
+    region: US
+    saas_percentage: 55
+    refresh_interval_days: 30
+    wave: 2
+    enabled: true
+    notes: >
+      VC focused on immigrant founders in the US. Small portfolio,
+      typically single-page listing. Likely Webflow-based.
+
+  # =============================================================================
+  # WAVE 3 — Competitions, universities, verticals (14 sources)
+  # =============================================================================
+
+  # ---------------------------------------------------------------------------
+  # 22. TechCrunch Battlefield
+  # ---------------------------------------------------------------------------
+  - name: techcrunch_battlefield
+    label: TechCrunch Battlefield
+    url: https://techcrunch.com/startup-battlefield/
+    alt_urls:
+      - https://techcrunch.com/startups/
+      - https://techcrunch.com/battlefield/
+    scrape_method: static_html
+    template: wordpress
+    field_mapping:
+      name: "h2.post-title a, .company-name"  # guess
+      url: "h2.post-title a[href], .company-link[href]"  # guess
+      description: ".post-excerpt, .company-description"  # guess
+      industry: ".post-category, .company-tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: query_param
+      param_name: page
+      max_pages: 20
+    estimated_yield: "200-500 companies"
+    region: Global
+    saas_percentage: 50
+    refresh_interval_days: 30
+    wave: 3
+    enabled: true
+    notes: >
+      TechCrunch Startup Battlefield competition alumni. High-profile
+      startups. WordPress-based site with paginated archives.
+
+  # ---------------------------------------------------------------------------
+  # 23. Oxford Innovation
+  # ---------------------------------------------------------------------------
+  - name: oxford_innovation
+    label: Oxford Innovation
+    url: https://oxfordvp.com/portfolio/
+    alt_urls:
+      - https://www.oxfordvp.com/portfolio/
+      - https://oxfordsciencesinnovation.com/portfolio/
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: "h3.company-name, .portfolio-item h3"  # guess
+      url: ".portfolio-item a[href]"  # guess
+      description: ".portfolio-item p"  # guess
+      industry: ".portfolio-item .sector-tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "50-150 companies"
+    region: Europe
+    saas_percentage: 30
+    refresh_interval_days: 60
+    wave: 3
+    enabled: true
+    notes: >
+      Oxford University-affiliated venture arm. Heavy deeptech and
+      life sciences. Lower SaaS percentage but high-quality companies.
+
+  # ---------------------------------------------------------------------------
+  # 24. Cambridge Enterprise
+  # ---------------------------------------------------------------------------
+  - name: cambridge_enterprise
+    label: Cambridge Enterprise
+    url: https://www.enterprise.cam.ac.uk/portfolio/
+    alt_urls:
+      - https://enterprise.cam.ac.uk/portfolio/
+      - https://www.enterprise.cam.ac.uk/ventures/
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: "h3.company-name, .venture-name"  # guess
+      url: ".venture-item a[href], .portfolio-item a[href]"  # guess
+      description: ".venture-description, .portfolio-item p"  # guess
+      industry: ".venture-sector"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "50-150 companies"
+    region: Europe
+    saas_percentage: 25
+    refresh_interval_days: 60
+    wave: 3
+    enabled: true
+    notes: >
+      Cambridge University's commercialization arm. URL needs verification
+      via search. Heavy life sciences and deeptech. Low SaaS percentage.
+
+  # ---------------------------------------------------------------------------
+  # 25. CMU VentureBridge
+  # ---------------------------------------------------------------------------
+  - name: cmu_venturebridge
+    label: CMU VentureBridge
+    url: https://www.cmu.edu/swartz-center-for-entrepreneurship/venturebridge/
+    alt_urls:
+      - https://www.cmu.edu/venturebridge/
+      - https://www.cmu.edu/swartz-center-for-entrepreneurship/
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: "h3.company-name, .startup-name"  # guess
+      url: ".startup-item a[href]"  # guess
+      description: ".startup-description, .startup-item p"  # guess
+      industry: ".startup-sector"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "30-80 companies"
+    region: US
+    saas_percentage: 45
+    refresh_interval_days: 60
+    wave: 3
+    enabled: true
+    notes: >
+      Carnegie Mellon University venture program. URL needs verification
+      via search. Strong CS/engineering, decent SaaS representation.
+
+  # ---------------------------------------------------------------------------
+  # 26. Elemental Impact (climate)
+  # ---------------------------------------------------------------------------
+  - name: elemental_impact
+    label: Elemental Impact
+    url: https://elementalexcelerator.com/portfolio/
+    alt_urls:
+      - https://www.elementalexcelerator.com/portfolio/
+      - https://elementalexcelerator.com/companies/
+    scrape_method: static_html
+    template: wordpress
+    field_mapping:
+      name: "h3.company-name, .portfolio-item h3"  # guess
+      url: ".portfolio-item a[href]"  # guess
+      description: ".portfolio-item p, .company-tagline"  # guess
+      industry: ".portfolio-item .tag, .sector-label"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "100-200 companies"
+    region: US
+    saas_percentage: 30
+    refresh_interval_days: 30
+    wave: 3
+    enabled: true
+    notes: >
+      Climate and sustainability-focused accelerator (formerly Elemental
+      Excelerator). Heavy hardware/cleantech, but some climate SaaS.
+
+  # ---------------------------------------------------------------------------
+  # 27. Third Derivative (climate)
+  # ---------------------------------------------------------------------------
+  - name: third_derivative
+    label: Third Derivative
+    url: https://third-derivative.org/portfolio
+    alt_urls:
+      - https://www.third-derivative.org/portfolio
+      - https://third-derivative.org/startups
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: "h3.company-name, .startup-card h3"  # guess
+      url: ".startup-card a[href]"  # guess
+      description: ".startup-card p"  # guess
+      industry: ".startup-card .tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "50-100 companies"
+    region: Global
+    saas_percentage: 25
+    refresh_interval_days: 30
+    wave: 3
+    enabled: true
+    notes: >
+      Climate-tech accelerator by RMI. Mostly hardware and energy
+      startups. Low SaaS percentage but growing software component.
+
+  # ---------------------------------------------------------------------------
+  # 28. Bethnal Green Ventures
+  # ---------------------------------------------------------------------------
+  - name: bethnal_green_ventures
+    label: Bethnal Green Ventures
+    url: https://bethnalgreenventures.com/portfolio/
+    alt_urls:
+      - https://www.bethnalgreenventures.com/portfolio/
+      - https://bethnalgreenventures.com/companies/
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: "h3.venture-name, .portfolio-card h3"  # guess
+      url: ".portfolio-card a[href]"  # guess
+      description: ".portfolio-card p, .venture-description"  # guess
+      industry: ".portfolio-card .tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "50-150 companies"
+    region: Europe
+    saas_percentage: 40
+    refresh_interval_days: 30
+    wave: 3
+    enabled: true
+    notes: >
+      UK-based tech-for-good VC. Focus on social impact startups.
+      Mix of SaaS, marketplace, and hardware companies.
+
+  # ---------------------------------------------------------------------------
+  # 29. Startmate (ANZ)
+  # ---------------------------------------------------------------------------
+  - name: startmate
+    label: Startmate
+    url: https://www.startmate.com/portfolio
+    alt_urls:
+      - https://startmate.com/portfolio
+      - https://www.startmate.com/companies
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: "h3.company-name, .portfolio-card h3"  # guess
+      url: ".portfolio-card a[href]"  # guess
+      description: ".portfolio-card p, .company-tagline"  # guess
+      industry: ".portfolio-card .tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "100-300 companies"
+    region: ANZ
+    saas_percentage: 55
+    refresh_interval_days: 30
+    wave: 3
+    enabled: true
+    notes: >
+      Australia/New Zealand accelerator. Growing ecosystem with
+      decent SaaS representation. Single-page portfolio typical.
+
+  # ---------------------------------------------------------------------------
+  # 30. Blackbird (ANZ)
+  # ---------------------------------------------------------------------------
+  - name: blackbird
+    label: Blackbird
+    url: https://www.blackbird.vc/portfolio
+    alt_urls:
+      - https://blackbird.vc/portfolio
+      - https://www.blackbird.vc/companies
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: "h3.company-name, .portfolio-card h3"  # guess
+      url: ".portfolio-card a[href]"  # guess
+      description: ".portfolio-card p"  # guess
+      industry: ".portfolio-card .sector"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "100-200 companies"
+    region: ANZ
+    saas_percentage: 50
+    refresh_interval_days: 30
+    wave: 3
+    enabled: true
+    notes: >
+      Leading ANZ VC (Canva is a notable portfolio company).
+      Larger checks than Startmate. Good software representation.
+
+  # ---------------------------------------------------------------------------
+  # 31. Iterative (SE Asia)
+  # ---------------------------------------------------------------------------
+  - name: iterative
+    label: Iterative
+    url: https://iterative.vc/portfolio
+    alt_urls:
+      - https://www.iterative.vc/portfolio
+      - https://iterative.vc/companies
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: "h3.company-name, .portfolio-card h3"  # guess
+      url: ".portfolio-card a[href]"  # guess
+      description: ".portfolio-card p"  # guess
+      industry: ".portfolio-card .tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "50-150 companies"
+    region: SE Asia
+    saas_percentage: 50
+    refresh_interval_days: 30
+    wave: 3
+    enabled: true
+    notes: >
+      Southeast Asia-focused accelerator. Mix of SaaS, fintech,
+      and e-commerce. Growing portfolio.
+
+  # ---------------------------------------------------------------------------
+  # 32. NXTP Ventures (LatAm)
+  # ---------------------------------------------------------------------------
+  - name: nxtp_ventures
+    label: NXTP Ventures
+    url: https://www.nxtpventures.com/portfolio
+    alt_urls:
+      - https://nxtpventures.com/portfolio
+      - https://www.nxtpventures.com/companies
+    scrape_method: static_html
+    template: generic
+    field_mapping:
+      name: "h3.company-name, .portfolio-item h3"  # guess
+      url: ".portfolio-item a[href]"  # guess
+      description: ".portfolio-item p"  # guess
+      industry: ".portfolio-item .tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "100-200 companies"
+    region: LatAm
+    saas_percentage: 45
+    refresh_interval_days: 30
+    wave: 3
+    enabled: true
+    notes: >
+      Latin America-focused VC. Diverse portfolio across fintech,
+      marketplace, and SaaS. Moderate SaaS percentage.
+
+  # ---------------------------------------------------------------------------
+  # 33. Deloitte Fast 500
+  # ---------------------------------------------------------------------------
+  - name: deloitte_fast_500
+    label: Deloitte Fast 500
+    url: https://www.deloitte.com/us/en/pages/technology-media-and-telecommunications/articles/fast500-winners.html
+    alt_urls:
+      - https://www2.deloitte.com/us/en/pages/technology-media-and-telecommunications/articles/fast500-winners.html
+      - https://www.deloitte.com/us/en/pages/technology/articles/fast-500.html
+    scrape_method: static_html
+    template: custom
+    field_mapping:
+      name: "td.company-name, .winner-name"  # guess
+      url: null
+      description: null
+      industry: "td.company-sector, .winner-sector"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: none
+      param_name: null
+      max_pages: 1
+    estimated_yield: "500 companies"
+    region: US
+    saas_percentage: 40
+    refresh_interval_days: 365
+    wave: 3
+    enabled: true
+    notes: >
+      Annual list of fastest-growing US tech companies. URL needs
+      verification as Deloitte reorganizes pages annually. High-growth
+      companies but includes non-SaaS. Updated once per year.
+
+  # ---------------------------------------------------------------------------
+  # 34. Indie Hackers
+  # ---------------------------------------------------------------------------
+  - name: indie_hackers
+    label: Indie Hackers
+    url: https://www.indiehackers.com/products
+    alt_urls:
+      - https://indiehackers.com/products
+      - https://www.indiehackers.com/products?sorting=newest
+    scrape_method: browser
+    template: custom
+    field_mapping:
+      name: "h3.product-name, .product-card__name"  # guess
+      url: ".product-card a[href], .product-link[href]"  # guess
+      description: ".product-card__tagline, .product-tagline"  # guess
+      industry: ".product-card__tag"  # guess
+      stage: null
+      team_size: null
+    pagination:
+      type: scroll
+      param_name: null
+      max_pages: 50
+    estimated_yield: "1,000-3,000 products"
+    region: Global
+    saas_percentage: 80
+    refresh_interval_days: 14
+    wave: 3
+    enabled: true
+    notes: >
+      Community of bootstrapped founders. Very high SaaS percentage.
+      Requires browser/JS rendering for infinite scroll. Products often
+      have revenue data. Good for finding bootstrapped SaaS companies.
+
+  # ---------------------------------------------------------------------------
+  # 35. F6S
+  # ---------------------------------------------------------------------------
+  - name: f6s
+    label: F6S
+    url: https://www.f6s.com/companies
+    alt_urls:
+      - https://f6s.com/companies
+      - https://www.f6s.com/startups
+    scrape_method: browser
+    template: custom
+    field_mapping:
+      name: "h3.company-name, .startup-card h3"  # guess
+      url: ".startup-card a[href], a.company-link[href]"  # guess
+      description: ".startup-card .tagline, .company-description"  # guess
+      industry: ".startup-card .tag, .company-industry"  # guess
+      stage: ".startup-card .stage"  # guess
+      team_size: ".startup-card .team-size"  # guess
+    pagination:
+      type: scroll
+      param_name: null
+      max_pages: 100
+    estimated_yield: "5,000-10,000+ companies"
+    region: Global
+    saas_percentage: 55
+    refresh_interval_days: 14
+    wave: 3
+    enabled: true
+    notes: >
+      Massive global startup directory. Requires browser rendering.
+      Infinite scroll pagination. Has structured data for stage and
+      team size which most directories lack. Very high volume.

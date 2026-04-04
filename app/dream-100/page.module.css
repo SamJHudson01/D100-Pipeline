@@ -1,0 +1,177 @@
+/* Dream 100 — Full-width target list */
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-6);
+}
+
+.page__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--space-6);
+}
+
+.page__stats {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.page__pipeline-link {
+  color: var(--text-link);
+  text-decoration: none;
+}
+
+/* ─── Company Card ────────────────────────────────────────────────────────── */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-5) var(--space-6);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: background var(--duration-fast) ease-out, border-color var(--duration-fast) ease-out;
+}
+
+.card:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-default);
+}
+
+.card__identity {
+  min-width: 0;
+}
+
+.card__name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.card__meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.card__tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--space-2);
+  height: 20px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.card__tag--accent {
+  background: var(--badge-medium-bg);
+  color: var(--accent-amber);
+}
+
+/* ─── Sequence Progress ───────────────────────────────────────────────────── */
+
+.card__sequence {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 120px;
+}
+
+.card__step-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.card__progress {
+  display: flex;
+  gap: 2px;
+  width: 100%;
+}
+
+.card__progress-dot {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bg-elevated);
+}
+
+.card__progress-dot--done {
+  background: var(--accent-amber-muted);
+}
+
+/* ─── Timing ──────────────────────────────────────────────────────────────── */
+
+.card__timing {
+  text-align: right;
+  min-width: 80px;
+}
+
+.card__days {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.card__days--overdue {
+  color: var(--warning-text);
+}
+
+/* ─── Score ────────────────────────────────────────────────────────────────── */
+
+.card__score {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 16px;
+  font-weight: 600;
+  min-width: 36px;
+  text-align: right;
+}
+
+/* ─── BLUF snippet ────────────────────────────────────────────────────────── */
+
+.card__bluf {
+  grid-column: 1 / -1;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 18px;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.card__bluf-category {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-amber);
+  margin-right: var(--space-2);
+}
+
+/* ─── Empty State ─────────────────────────────────────────────────────────── */
+
+.empty {
+  padding: var(--space-12) var(--space-7);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}

@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:17-alpine
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: prospectatron
+      POSTGRES_PASSWORD: prospectatron
+      POSTGRES_DB: prospectatron
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U prospectatron"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "3005:3000"
+    environment:
+      DATABASE_URL: postgresql://prospectatron:prospectatron@db:5432/prospectatron
+      DIRECT_URL: postgresql://prospectatron:prospectatron@db:5432/prospectatron
+      NODE_ENV: production
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

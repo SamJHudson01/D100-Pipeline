@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Next.js
+.next/
+out/
+*.tsbuildinfo
+
+# Prisma generated client
+lib/generated/prisma/
+
+# Prospect data (generated at runtime)
+prospects/
+/tmp/research_*.json
+
+# SQLite (legacy)
+*.db
+*.db-wal
+*.db-shm
+
+# OS
+.DS_Store
+
+# Council / test-architect output
+.council/
+.test-architect/
+
+# Plan files (conversation artifacts)
+PLAN-*.md

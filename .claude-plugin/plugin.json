@@ -1,0 +1,25 @@
+{
+  "name": "prospectatron",
+  "version": "0.1.0",
+  "description": "AI-powered B2B prospecting pipeline. Discovers startups, enriches firmographics, scores against your ICP, manages Dream 100 outreach sequences. Includes a Next.js dashboard and Claude Code skills for daily prospecting workflows.",
+  "author": {
+    "name": "Sam Hudson",
+    "url": "https://github.com/SamJHudson01"
+  },
+  "repository": "https://github.com/SamJHudson01/prospectatron",
+  "license": "MIT",
+  "keywords": [
+    "prospecting",
+    "sales",
+    "b2b",
+    "dream-100",
+    "outreach",
+    "enrichment",
+    "icp-scoring",
+    "research"
+  ],
+  "skills": {
+    "prospect": "skills/prospect",
+    "research": "skills/research"
+  }
+}

@@ -1,0 +1,197 @@
+/* Design Tokens — Single source of truth for the entire UI
+ * Source: DESIGN_SYSTEM.md (TestKarma Design System)
+ * Dark theme, warm amber accent, Inter + JetBrains Mono + Instrument Serif
+ */
+
+:root {
+  /* ─── Surfaces (elevation hierarchy) ───────────────────────────────────── */
+  --bg-base: #0D0F0E;
+  --bg-surface: #141716;
+  --bg-elevated: #1A1D1C;
+  --bg-hover: #1E2221;
+  --bg-active: #232826;
+  --bg-input: #111413;
+
+  /* ─── Text ─────────────────────────────────────────────────────────────── */
+  --text-primary: #F0EDE8;
+  --text-secondary: #B2B1AE;
+  --text-tertiary: #959491;
+  --text-disabled: #5C5B58;
+  --text-link: #7B9EFF;
+
+  /* ─── Accents (only 4 functional colors) ───────────────────────────────── */
+  --accent-amber: #E5A84B;
+  --accent-amber-muted: #B8863D;
+  --accent-amber-dark: #CFA044;
+  --accent-green: #3ECF8E;
+  --accent-green-muted: #2EA36E;
+  --accent-red: #E5534B;
+  --accent-red-muted: #B8423C;
+  --accent-purple: #A78BFA;
+
+  /* ─── Borders ──────────────────────────────────────────────────────────── */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  /* ─── Badges ───────────────────────────────────────────────────────────── */
+  --badge-high-bg: rgba(62, 207, 142, 0.15);
+  --badge-high-text: #3ECF8E;
+  --badge-medium-bg: rgba(229, 168, 75, 0.15);
+  --badge-medium-text: #E5A84B;
+  --badge-low-bg: rgba(155, 154, 151, 0.15);
+  --badge-low-text: #9B9A97;
+
+  /* ─── Feedback States ──────────────────────────────────────────────────── */
+  --error-bg: rgba(229, 83, 75, 0.10);
+  --error-border: rgba(229, 83, 75, 0.20);
+  --error-text: #E5534B;
+  --warning-bg: rgba(229, 168, 75, 0.10);
+  --warning-border: rgba(229, 168, 75, 0.20);
+  --warning-text: #E5A84B;
+  --success-bg: rgba(62, 207, 142, 0.15);
+  --success-text: #3ECF8E;
+
+  /* ─── Overlay ──────────────────────────────────────────────────────────── */
+  --overlay-bg: rgba(0, 0, 0, 0.65);
+
+  /* ─── Spacing (4px grid) ───────────────────────────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 48px;
+  --space-10: 64px;
+  --space-11: 80px;
+  --space-12: 96px;
+
+  /* ─── Border Radius ────────────────────────────────────────────────────── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* ─── Shadows ──────────────────────────────────────────────────────────── */
+  --shadow-low: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-float: 0 8px 40px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-glow-amber: 0 4px 12px rgba(229, 168, 75, 0.3);
+  --ring-focus-amber: 0 0 0 3px rgba(229, 168, 75, 0.15);
+
+  /* ─── Animation ────────────────────────────────────────────────────────── */
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 300ms;
+
+  /* ─── Fonts (set via next/font in layout) ──────────────────────────────── */
+  --font-body: var(--font-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-mono), Menlo, Consolas, monospace;
+}
+
+/* ─── Type Scale (12 styles) ─────────────────────────────────────────────── */
+
+.type-display-hero {
+  font-size: 56px;
+  line-height: 64px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.type-display-md {
+  font-size: 40px;
+  line-height: 48px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+}
+
+.type-display-section {
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.type-heading-lg {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin-top: 0;
+  margin-bottom: var(--space-6);
+}
+
+.type-heading-md {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: var(--space-9);
+  margin-bottom: var(--space-4);
+}
+
+.type-heading-sm {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: var(--space-7);
+  margin-bottom: var(--space-3);
+}
+
+.type-body-lg {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.type-body-md {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.type-body-sm {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: var(--text-secondary);
+}
+
+.type-label {
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+}
+
+.type-mono-md {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: 400;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.type-mono-sm {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 400;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}

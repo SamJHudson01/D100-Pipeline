@@ -1,0 +1,171 @@
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 4px var(--space-3);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  font-variant-numeric: tabular-nums;
+}
+
+.score-badge--qualify {
+  background: var(--badge-high-bg);
+  color: var(--badge-high-text);
+}
+
+.score-badge--nurture {
+  background: var(--badge-medium-bg);
+  color: var(--badge-medium-text);
+}
+
+.score-badge--skip {
+  background: var(--badge-low-bg);
+  color: var(--badge-low-text);
+}
+
+.score-badge--disqualify {
+  background: var(--error-bg);
+  color: var(--error-text);
+}
+
+.score-badge__trend {
+  font-size: 11px;
+}
+
+.state-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: 1px solid var(--border-subtle);
+}
+
+.state-chip--discovered {
+  color: var(--text-secondary);
+}
+
+.state-chip--qualified {
+  color: var(--accent-green);
+  border-color: rgba(62, 207, 142, 0.2);
+}
+
+.state-chip--nurture {
+  color: var(--badge-medium-text);
+  border-color: var(--warning-border);
+}
+
+.state-chip--contacted {
+  color: var(--accent-purple);
+  border-color: rgba(167, 139, 250, 0.2);
+}
+
+.state-chip--disqualified {
+  color: var(--accent-red);
+  border-color: var(--error-border);
+}
+
+.state-chip--pre_filtered {
+  color: var(--text-tertiary);
+}
+
+.state-chip--pre_filter_rejected {
+  color: var(--text-tertiary);
+}
+
+.state-chip--enriched {
+  color: var(--text-secondary);
+}
+
+.state-chip--skip {
+  color: var(--badge-low-text);
+}
+
+.state-chip--stale {
+  color: var(--text-tertiary);
+}
+
+.state-chip--dead {
+  color: var(--text-tertiary);
+}
+
+.response-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 4px var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.response-badge--no-reply {
+  color: var(--text-tertiary);
+  background: transparent;
+}
+
+.response-badge--opened {
+  color: var(--badge-medium-text);
+  background: var(--warning-bg);
+}
+
+.response-badge--replied {
+  color: var(--accent-green);
+  background: var(--success-bg);
+}
+
+.response-badge--meeting {
+  color: var(--accent-purple);
+  background: rgba(167, 139, 250, 0.08);
+}
+
+.confidence-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+  font-family: var(--font-mono);
+}
+
+.confidence-badge--high {
+  color: var(--accent-green);
+}
+
+.confidence-badge--medium {
+  color: var(--badge-medium-text);
+}
+
+.confidence-badge--low {
+  color: var(--badge-low-text);
+}
+
+.confidence-badge--unknown {
+  color: var(--text-tertiary);
+}
+
+/* Research badge — visually heavier than StateChip/ScoreBadge (Saarinen: Principle 1).
+   Filled treatment with high contrast to clearly signal research completion. */
+.research-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: var(--badge-high-bg);
+  color: var(--badge-high-text);
+}

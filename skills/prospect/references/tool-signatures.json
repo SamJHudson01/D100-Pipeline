@@ -1,0 +1,50 @@
+{
+  "product_analytics": [
+    {"name": "Amplitude", "patterns": ["cdn.amplitude.com", "window.amplitude"]},
+    {"name": "Mixpanel", "patterns": ["cdn.mxpnl.com", "window.mixpanel"]},
+    {"name": "PostHog", "patterns": ["posthog.com/static/array.js", "eu.i.posthog.com", "us.i.posthog.com", "window.posthog"]},
+    {"name": "Heap", "patterns": ["cdn.heapanalytics.com", "window.heap"]}
+  ],
+  "basic_analytics": [
+    {"name": "Google Analytics", "patterns": ["googletagmanager.com/gtag", "google-analytics.com/analytics.js", "window.gtag"]},
+    {"name": "Plausible", "patterns": ["plausible.io/js", "window.plausible"]}
+  ],
+  "cdp": [
+    {"name": "Segment", "patterns": ["cdn.segment.com/analytics.js", "window.analytics.identify"]}
+  ],
+  "experimentation": [
+    {"name": "Optimizely", "patterns": ["cdn.optimizely.com", "window.optimizely"]},
+    {"name": "VWO", "patterns": ["dev.visualwebsiteoptimizer.com", "window._vwo_code"]},
+    {"name": "LaunchDarkly", "patterns": ["sdk.launchdarkly.com", "window.LDClient"]},
+    {"name": "Statsig", "patterns": ["featuregates.org", "statsigapi.net", "window.statsig"]},
+    {"name": "GrowthBook", "patterns": ["cdn.growthbook.io", "window._growthbook"]}
+  ],
+  "session_replay": [
+    {"name": "Hotjar", "patterns": ["static.hotjar.com", "window.hj"]},
+    {"name": "FullStory", "patterns": ["edge.fullstory.com", "window.FS"]},
+    {"name": "LogRocket", "patterns": ["cdn.logrocket.io", "window.LogRocket"]},
+    {"name": "Clarity", "patterns": ["clarity.ms/tag", "window.clarity"]}
+  ],
+  "payment": [
+    {"name": "Stripe", "patterns": ["js.stripe.com", "window.Stripe", "pk_live_", "pk_test_"]},
+    {"name": "Paddle", "patterns": ["cdn.paddle.com", "window.Paddle"]},
+    {"name": "Chargebee", "patterns": ["js.chargebee.com", "window.Chargebee"]},
+    {"name": "LemonSqueezy", "patterns": ["assets.lemonsqueezy.com", "createLemonSqueezy"]}
+  ],
+  "support": [
+    {"name": "Intercom", "patterns": ["widget.intercom.io", "window.Intercom"]},
+    {"name": "Zendesk", "patterns": ["static.zdassets.com", "window.zE"]},
+    {"name": "Crisp", "patterns": ["client.crisp.chat", "window.$crisp"]},
+    {"name": "Drift", "patterns": ["cdn.drift.com", "js.driftt.com"]}
+  ],
+  "onboarding": [
+    {"name": "Appcues", "patterns": ["window.Appcues"]},
+    {"name": "UserFlow", "patterns": ["userflow.js"]},
+    {"name": "Chameleon", "patterns": ["window.chmln"]}
+  ],
+  "referral": [
+    {"name": "GrowSurf", "patterns": ["growsurf.com"]},
+    {"name": "Rewardful", "patterns": ["rewardful.com"]},
+    {"name": "FirstPromoter", "patterns": ["firstpromoter.com"]}
+  ]
+}

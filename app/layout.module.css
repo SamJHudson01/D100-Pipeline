@@ -1,0 +1,39 @@
+/* Root layout — navigation bar */
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  height: 56px;
+  padding: 0 var(--space-6);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-base);
+  font-size: 14px;
+}
+
+.nav__link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--duration-fast) ease-out;
+}
+
+.nav__link:hover {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.nav__link--active {
+  color: var(--text-primary);
+}
+
+.nav__link--end {
+  color: var(--text-tertiary);
+  text-decoration: none;
+  margin-left: auto;
+  transition: color var(--duration-fast) ease-out;
+}
+
+.nav__link--end:hover {
+  color: var(--text-secondary);
+  text-decoration: none;
+}
