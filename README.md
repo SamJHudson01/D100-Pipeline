@@ -1,4 +1,4 @@
-# Prospectatron
+# D100 Pipeline 
 
 A full-stack B2B prospecting pipeline that enriches companies with firmographic data, scores them against your ICP, deep-researches founders for personalisation, and manages outreach through a Dream 100 sequence. Built for a growth consultancy's daily workflow, now open-sourced as a reference implementation of what's possible when you wire [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skills into a real product.
 
@@ -6,16 +6,16 @@ A full-stack B2B prospecting pipeline that enriches companies with firmographic 
 
 Cold outreach at scale is a solved problem. Cold outreach that actually converts is not. The difference is research depth — knowing what a founder wrote on their blog last month, what their pricing page is missing, why their signup flow has friction. That research takes 10-20 minutes per company. Multiply by a Dream 100 list and you've burned your entire week on tab switching.
 
-Prospectatron automates the boring parts (firmographics, scoring) and the time-consuming parts (founder deep-dives, CRO opportunity spotting, outreach angle generation) while keeping the human in the loop for judgment calls. The operator decides who to pursue and what to say. The system does the legwork.
+D100 Pipeline automates the boring parts (firmographics, scoring) and the time-consuming parts (founder deep-dives, CRO opportunity spotting, outreach angle generation) while keeping the human in the loop for judgment calls. The operator decides who to pursue and what to say. The system does the legwork.
 
 This was built for my own daily use with no initial intention to release it. It's tuned to a specific ICP (B2B SaaS startups that need growth help) and a specific outreach method (personalised Loom recordings). Adapting it to your ICP and outreach style is straightforward — the pipeline structure is universal, only the scoring rubric and skill instructions change.
 
-**You bring your own companies.** Prospectatron doesn't ship with scraping scripts for specific platforms. Instead, it gives you `pool_db.upsert_company()` — a simple Python interface to insert companies from whatever sources you have. CSV export from LinkedIn Sales Navigator, a CRM dump, an API call to Crunchbase, a manual list — the pipeline doesn't care where the companies come from. See `scripts/gather_example.py` for the template.
+**You bring your own companies.** D100 Pipeline doesn't ship with scraping scripts for specific platforms. Instead, it gives you `pool_db.upsert_company()` — a simple Python interface to insert companies from whatever sources you have. CSV export from LinkedIn Sales Navigator, a CRM dump, an API call to Crunchbase, a manual list — the pipeline doesn't care where the companies come from. See `scripts/gather_example.py` for the template.
 
 
 ## The Two-Interface Architecture
 
-This is the interesting part. Prospectatron isn't just a dashboard or just a CLI tool — it's both, sharing a single Postgres database as the contract between them.
+This is the interesting part. D100 Pipeline isn't just a dashboard or just a CLI tool — it's both, sharing a single Postgres database as the contract between them.
 
 ```
 ┌─────────────────────┐         ┌───────────────┐         ┌──────────────────────┐
@@ -54,7 +54,7 @@ Your data  →  /prospect daily  →  Dashboard /triage  →  /research  →  Dr
 
 ### Seed — Bring Your Own Companies
 
-Prospectatron ships with a template (`scripts/gather_example.py`) and a database interface (`pool_db.upsert_company()`). You write gathering scripts for your sources. The contract is simple:
+D100 Pipeline ships with a template (`scripts/gather_example.py`) and a database interface (`pool_db.upsert_company()`). You write gathering scripts for your sources. The contract is simple:
 
 ```python
 from pool_db import get_db, upsert_company
@@ -213,7 +213,7 @@ Then open Claude Code in the project directory and run `/prospect daily` to run 
 
 ## Adapting for Your Use Case
 
-The pipeline is generic. The judgment criteria are specific. To make Prospectatron yours:
+The pipeline is generic. The judgment criteria are specific. To make D100 Pipeline yours:
 
 1. **Write gathering scripts** — Copy `scripts/gather_example.py` and implement your data collection. CSV import, API call, CRM export, web scrape — anything that produces `(domain, name, url, description, source)` tuples.
 2. **Edit `references/icp-criteria.md`** — Define your ideal customer profile, hard disqualifiers, and target signals.
